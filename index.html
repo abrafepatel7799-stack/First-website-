@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>A Special Request 🌸</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 40%, #e1bee7 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    /* floating hearts background */
+    .hearts {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+      overflow: hidden;
+    }
+    .heart {
+      position: absolute;
+      opacity: 0.2;
+      animation: floatUp 6s infinite linear;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(110vh) rotate(0deg);  opacity: 0.2; }
+      100% { transform: translateY(-10vh)  rotate(20deg); opacity: 0;   }
+    }
+
+    /* card */
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 28px;
+      padding: 2.8rem 2.2rem 2.4rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(200, 80, 150, 0.18);
+      position: relative;
+      z-index: 2;
+    }
+
+    .avatar {
+      width: 76px; height: 76px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f06292, #ab47bc);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 1rem;
+    }
+
+    .from-to {
+      font-size: 12px;
+      color: #ab47bc;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #4a148c;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .sub {
+      font-size: 14px;
+      color: #880e4f;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    /* buttons */
+    .btn-area {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      align-items: center;
+      min-height: 56px;
+      position: relative;
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #e91e8c, #ab47bc);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 40px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 14px rgba(233,30,140,0.28);
+      transition: transform 0.12s, box-shadow 0.12s;
+    }
+    .btn-yes:hover  { transform: scale(1.06); box-shadow: 0 4px 22px rgba(233,30,140,0.38); }
+    .btn-yes:active { transform: scale(0.97); }
+
+    .no-wrapper {
+      position: relative;
+      display: inline-block;
+      transition: margin 0.18s cubic-bezier(.25,.8,.25,1);
+    }
+
+    .btn-no {
+      background: white;
+      color: #c2185b;
+      border: 1.5px solid #f48fb1;
+      border-radius: 50px;
+      padding: 13px 30px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color 0.15s;
+    }
+    .btn-no:hover { border-color: #e91e8c; }
+
+    /* yes screen */
+    .yes-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .yes-screen.show { display: flex; }
+
+    .big-emoji {
+      font-size: 60px;
+      animation: pop 0.45s ease;
+    }
+    @keyframes pop {
+      0%   { transform: scale(0); }
+      70%  { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+
+    .yes-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #6a1b9a;
+    }
+    .yes-names {
+      font-size: 15px;
+      color: #880e4f;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- floating hearts bg -->
+  <div class="hearts" id="hearts"></div>
+
+  <div class="card" id="card">
+
+    <!-- main ask -->
+    <div id="mainContent">
+      <div class="avatar">🌸</div>
+      <div class="from-to">syedabrafe → fatimahkhan</div>
+      <h1>Will you be my friend? 🥺</h1>
+      <p class="sub">I promise I'll be the best friend ever.<br>Please say yes! 💖</p>
+      <div class="btn-area" id="btnArea">
+        <button class="btn-yes" onclick="sayYes()">Yes 💖</button>
+        <div class="no-wrapper" id="noWrapper">
+          <button class="btn-no" id="noBtn"
+            onmouseenter="runAway(event)"
+            ontouchstart="runAway(event)">No 🙈</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- yes celebration -->
+    <div class="yes-screen" id="yesScreen">
+      <div class="big-emoji">🥳</div>
+      <div class="yes-title">Yayy!! Best Friends! 💜</div>
+      <div class="yes-names">syedabrafe &amp; fatimahkhan<br>forever friends 🌸✨</div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ── floating hearts ── */
+    const heartsEl = document.getElementById('hearts');
+    const emojis   = ['💖','💜','🌸','✨','💝','💞','🌺'];
+
+    function spawnHeart(fast){
+      const h = document.createElement('span');
+      h.className = 'heart';
+      h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      h.style.left     = (Math.random() * 95) + '%';
+      h.style.fontSize = (14 + Math.random() * 18) + 'px';
+      h.style.animationDelay    = fast ? '0s' : (Math.random() * 6) + 's';
+      h.style.animationDuration = fast ? '2s' : (4 + Math.random() * 4) + 's';
+      if(fast) h.style.opacity = '0.5';
+      heartsEl.appendChild(h);
+      if(fast) setTimeout(() => h.remove(), 2200);
+    }
+    for(let i = 0; i < 16; i++) spawnHeart(false);
+
+    /* ── runaway No button ── */
+    let attempts = 0;
+    const noWrapper = document.getElementById('noWrapper');
+    let mx = 0, my = 0;
+
+    function runAway(e){
+      e.preventDefault();
+      attempts++;
+
+      /* pick a direction away from pointer if possible */
+      const rect = noWrapper.getBoundingClientRect();
+      const cx   = rect.left + rect.width / 2;
+      const cy   = rect.top  + rect.height / 2;
+      let px = e.clientX || cx;
+      let py = e.clientY || cy;
+      if(e.touches && e.touches[0]){ px = e.touches[0].clientX; py = e.touches[0].clientY; }
+
+      const dx = cx - px || 1;
+      const dy = cy - py || 1;
+      const dist = Math.hypot(dx, dy) || 1;
+
+      const step = 110;
+      let nx = mx + (dx / dist) * step * (0.8 + Math.random() * 0.6);
+      let ny = my + (dy / dist) * step * (0.8 + Math.random() * 0.6);
+
+      /* clamp so it stays somewhat visible */
+      nx = Math.max(-160, Math.min(160, nx));
+      ny = Math.max(-80,  Math.min(80,  ny));
+
+      mx = nx; my = ny;
+      noWrapper.style.marginLeft = mx + 'px';
+      noWrapper.style.marginTop  = my + 'px';
+
+      /* shrink size on repeat */
+      const noBtn = document.getElementById('noBtn');
+      if(attempts === 2) { noBtn.style.fontSize = '13px'; noBtn.style.padding = '10px 22px'; }
+      if(attempts >= 3)  { noWrapper.style.opacity = '0'; noWrapper.style.pointerEvents = 'none'; }
+    }
+
+    /* ── yes! ── */
+    function sayYes(){
+      document.getElementById('mainContent').style.display = 'none';
+      document.getElementById('yesScreen').classList.add('show');
+      for(let i = 0; i < 24; i++) setTimeout(() => spawnHeart(true), i * 80);
+    }
+  </script>
+</body>
+</html>
